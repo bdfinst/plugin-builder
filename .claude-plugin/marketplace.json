@@ -6,13 +6,13 @@
   "plugins": [
     {
       "name": "marketplace-builder",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "Meta-plugin that scaffolds, audits, and maintains Claude Code plugin-marketplace monorepos.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/bdfinst/plugin-builder.git",
         "path": "plugins/marketplace-builder",
-        "ref": "marketplace-builder-v0.1.0"
+        "ref": "marketplace-builder-v0.2.0"
       }
     }
   ]
