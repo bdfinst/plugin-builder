@@ -9,6 +9,10 @@ user-invocable: true
 Sweep the marketplace for portability hazards across the three targets: macOS
 (bash 3.2 / BSD coreutils), Linux, and Windows Git Bash.
 
+**Governing rule (§4):** *every* script created for a plugin or its repo must be
+cross-platform — a bash script must run on all three targets, and scripts in any
+other language must too. There are no OS-specific scripts; flag any as a failure.
+
 ## Before you start
 
 Read `${CLAUDE_PLUGIN_ROOT}/knowledge/marketplace-conventions.md` (§4).

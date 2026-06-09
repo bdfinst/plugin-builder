@@ -38,9 +38,10 @@ directory is empty or is a fresh git repo.
    escape; empty for now).
 
 4. **Dev scripts.** Copy from `${CLAUDE_PLUGIN_ROOT}/templates/scripts/`:
-   `structural-check.sh`, `portability-check.sh`, `dev-setup.sh` into
-   `scripts/`. `chmod +x` them. Also write `scripts/ci-local.sh` that runs all
-   three gates plus `bats tests/repo` (the local pre-push mirror of CI).
+   `structural-check.sh`, `portability-check.sh`, `agent-check.sh`,
+   `dev-setup.sh` into `scripts/`. `chmod +x` them. Also write
+   `scripts/ci-local.sh` that runs all of these gates plus `bats tests/repo`
+   (the local pre-push mirror of CI).
 
 5. **CI.** Copy `${CLAUDE_PLUGIN_ROOT}/templates/ci/plugin-tests.yml` to
    `.github/workflows/plugin-tests.yml`.

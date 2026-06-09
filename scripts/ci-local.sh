@@ -15,6 +15,7 @@ run() {
 
 run "structural"   bash scripts/structural-check.sh
 run "portability"  bash scripts/portability-check.sh
+run "agents"       bash scripts/agent-check.sh
 
 if command -v bats >/dev/null 2>&1; then
   run "hygiene sensor + self-test" bats tests/repo tests/marketplace-builder

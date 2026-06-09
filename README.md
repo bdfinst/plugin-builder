@@ -29,6 +29,7 @@ Then check prerequisites: `bash plugins/marketplace-builder/install.sh`.
 |---|---|---|
 | `/new-marketplace <owner>` | scaffold | Create the catalog, repo-root `tests/ scripts/ docs/` trees, CI, `release-please-config.json`, `dev-setup.sh`, the hygiene sensor, and a root `CLAUDE.md`. |
 | `/add-plugin <name>` | scaffold | Create `plugins/<name>/` (shipped skeleton, `plugin.json`, `install.sh` with the Git-Bash guard, `settings.json`, `CLAUDE.md`); register it in the catalog and release config with the catalog `extra-files` sync. |
+| `/add-agent <plugin> <agent>` | scaffold | Author a focused subagent with Anthropic's role recommendations: single responsibility, explicit "does NOT handle" boundary, least-privilege `tools`, right-sized `model`. |
 | `/audit-plugin [name]` | audit | Run the hygiene sensor + structural checks + portability sweep; report and offer fixes. |
 | `/portability-check` | audit | `shellcheck -x` shipped + dev scripts; flag bash-4/GNU-only constructs; verify shebangs; check the Git-Bash `install.sh` guard. |
 | `/release-setup` | scaffold | Wire `release-please` per-plugin packages + the `marketplace.json` `extra-files` jsonpath sync. |
@@ -47,6 +48,16 @@ four hygiene invariants proved by a portable `bats` sensor:
 
 …plus portability across macOS bash 3.2 / BSD coreutils / Windows Git Bash,
 model-free CI gates, and automated `release-please` versioning with catalog sync.
+
+It also bakes in two authoring principles:
+
+- **Primitive selection** — prefer a deterministic **hook** wired to a real tool
+  over a model-driven **skill** when the task is deterministic; reserve skills
+  for judgment and **agents** for complex, isolated reasoning.
+- **Agent roles** (Anthropic's recommendations) — each agent has a single
+  responsibility, an explicit *focuses on* workflow **and** a *does NOT handle*
+  boundary, least-privilege `tools`, and a right-sized `model`. Author them with
+  `/add-agent`; validate frontmatter deterministically with `agent-check.sh`.
 
 See [`plugins/marketplace-builder/knowledge/marketplace-conventions.md`](plugins/marketplace-builder/knowledge/marketplace-conventions.md)
 for the full source of truth.

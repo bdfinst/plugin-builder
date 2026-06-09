@@ -104,6 +104,13 @@ CI; `/audit-plugin` runs it.
 
 ## 4. Portability — macOS bash 3.2 / BSD coreutils / Windows Git Bash
 
+> **Rule: every script created for a plugin MUST be cross-platform.** No script
+> may assume a single OS. A bash script **must run on macOS, Linux, and Windows
+> Git Bash**; a script in any other language (Python, Node, …) must likewise run
+> on all three. There is no "Linux-only" or "macOS-only" script in a plugin or in
+> the repo-root tooling — `/portability-check` and CI enforce this, and
+> `/add-plugin`/`/audit-plugin` refuse scripts that violate it.
+
 All shell is `#!/usr/bin/env bash` and must run on all three targets:
 
 - **bash 3.2-safe:** no `mapfile`/`readarray`, `declare -A`, `${var,,}`,
@@ -123,7 +130,9 @@ All shell is `#!/usr/bin/env bash` and must run on all three targets:
 - **Shipping hygiene.** Runtime files only under `plugins/<name>/`; tests/build
   at repo root. Reference every executed helper as `${CLAUDE_PLUGIN_ROOT}/<path>`.
   Scripts the plugin runs at runtime **must** ship *and* be discoverable.
-- **Portability.** See §4.
+- **Portability (mandatory, all scripts).** Every script a plugin or its repo
+  ships/runs must be cross-platform — bash must run on macOS, Linux, and Windows
+  Git Bash; other languages must run on all three too. See §4.
 - **Tested.** Ship a bats sensor (§3) + targeted unit/smoke tests; wire them into
   CI as model-free gates; mirror them in a local pre-push gate; keep gates
   parallel and fast. A runnable component gets a lightweight smoke test + CI job.
@@ -134,6 +143,36 @@ All shell is `#!/usr/bin/env bash` and must run on all three targets:
   per plugin.
 - **Cloud-aware.** A gated `SessionStart` install hook + a skill-file fallback so
   the plugin is usable in web sessions.
+
+---
+
+## 5b. Primitive selection — prefer deterministic hooks over skills
+
+A plugin's behavior can be delivered as a **hook**, a **skill**, or an **agent**.
+They are not interchangeable; choosing the wrong one trades reliability for
+needless model invocation. The governing rule when authoring **or auditing**:
+
+> **If a task can be done deterministically by a real tool/script, wire it as a
+> hook (or call the tool directly) — do not default to a skill.** Reserve skills
+> and agents for work that genuinely needs model judgment or generation.
+
+A skill that merely shells out to a fixed command on every run is a hook wearing
+a costume: it spends tokens and adds nondeterminism to something that should
+just *execute*. Convert it.
+
+| Use this | When the task is… | Why |
+|---|---|---|
+| **Hook** (`PreToolUse`/`PostToolUse`/`SessionStart`, wired to a script/tool) | deterministic, non-negotiable, must run every time (lint, validate, block, format, install) | runs in the harness, not the model; reliable + free of tokens |
+| **Skill** (`SKILL.md`) | a reusable procedure or reference that needs reasoning/adaptation, or a user-invoked workflow | loaded on demand; model applies judgment |
+| **Agent** (`agents/<name>.md`) | complex, high-context, multi-step reasoning best kept out of the main context | isolated context, focused role, returns a summary (see `agent-authoring.md`) |
+
+Decision order: **deterministic tool/hook → skill → agent.** Start at the top and
+only move down when the task truly needs it.
+
+This is why this plugin's own validation (the bats sensor, `structural-check.sh`,
+`agent-check.sh`) is implemented as deterministic scripts run by hooks/CI — not as
+skills. `/audit-plugin` flags any shipped skill whose entire job is running a
+fixed deterministic command and recommends converting it to a hook.
 
 ---
 
@@ -167,8 +206,10 @@ can never drift:
 
 - [ ] Every catalog entry maps to a `plugins/<name>/` with a `plugin.json`; versions/refs in sync.
 - [ ] The hygiene sensor (§3) is green — no shipped test/build scripts, all refs discoverable.
-- [ ] `shellcheck -x` clean (warning severity) over shipped + dev scripts; all shebangs `env bash`.
+- [ ] Every script is cross-platform — bash runs on macOS, Linux, and Windows Git Bash (no OS-specific scripts); `shellcheck -x` clean (warning severity) over shipped + dev scripts; all shebangs `env bash`.
 - [ ] Each `install.sh` has the Git-Bash-on-Windows guard; `scripts/dev-setup.sh` provisions the toolchain.
 - [ ] CI runs structural + portability + bats gates; a local pre-push gate mirrors them.
 - [ ] `release-please` wired with per-plugin packages + catalog `extra-files` sync.
 - [ ] A gated `SessionStart` cloud hook + skill-file fallback exist.
+- [ ] Every shipped `agents/*.md` has required `name`/`description`, least-privilege `tools`, and an explicit "does NOT handle" boundary; none uses the plugin-ignored `hooks`/`mcpServers`/`permissionMode` (see `agent-authoring.md`).
+- [ ] No shipped skill merely runs a fixed deterministic command — those are hooks (§5b).

@@ -11,6 +11,7 @@ it before acting.
 |---|---|---|
 | `/new-marketplace <owner>` | scaffold | Create the catalog, repo-root `tests/ scripts/ docs/` trees, CI, `release-please-config.json`, `dev-setup.sh`, the hygiene sensor, and a root `CLAUDE.md`. |
 | `/add-plugin <name>` | scaffold | Create `plugins/<name>/` (shipped skeleton, `plugin.json`, `install.sh` with the Git-Bash guard, `settings.json`, `CLAUDE.md`); register it in the catalog and release config with the catalog `extra-files` sync. |
+| `/add-agent <plugin> <agent>` | scaffold | Author a focused subagent (`agents/<agent>.md`) with Anthropic's role recommendations: single responsibility, explicit "does NOT handle" boundary, least-privilege `tools`, right-sized `model`. |
 | `/audit-plugin [name]` | audit | Run the hygiene sensor + structural checks + portability sweep. Report findings; offer fixes. |
 | `/portability-check` | audit | `shellcheck -x` shipped + dev scripts; flag bash-4/GNU-only constructs; verify shebangs; check the Git-Bash `install.sh` guard. |
 | `/release-setup` | scaffold | Wire `release-please` per-plugin packages + the `marketplace.json` `extra-files` jsonpath sync. |
@@ -23,8 +24,13 @@ it before acting.
 2. **Installed plugins run with `${CLAUDE_PLUGIN_ROOT}` set, cwd = user project**
    — reference every executed helper as `${CLAUDE_PLUGIN_ROOT}/<path>`.
 
+Plus a **primitive-selection** rule (§5b): prefer a deterministic **hook** wired
+to a real tool over a model-driven **skill** when the task is deterministic;
+reserve skills for judgment and **agents** for complex, isolated reasoning.
+
 See `knowledge/marketplace-conventions.md` for the full anatomy, the four
-hygiene invariants, portability rules, and the release/catalog sync.
+hygiene invariants, portability rules, primitive selection, and the
+release/catalog sync; and `knowledge/agent-authoring.md` for agent roles.
 
 ## What ships
 
