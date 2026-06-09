@@ -1,0 +1,11 @@
+# Machine-local Claude Code settings (permissions, etc.) — not shared.
+.claude/settings.local.json
+
+# OS / editor noise
+.DS_Store
+*.swp
+
+# Python
+__pycache__/
+*.pyc
+.venv/

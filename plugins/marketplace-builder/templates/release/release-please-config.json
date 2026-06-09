@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "separate-pull-requests": true,
+  "packages": {
+    "plugins/__NAME__": {
+      "release-type": "simple",
+      "package-name": "__NAME__",
+      "component": "__NAME__",
+      "extra-files": [
+        ".claude-plugin/plugin.json",
+        {
+          "type": "json",
+          "path": "/.claude-plugin/marketplace.json",
+          "jsonpath": "$.plugins[?(@.name=='__NAME__')].version"
+        },
+        {
+          "type": "json",
+          "path": "/.claude-plugin/marketplace.json",
+          "jsonpath": "$.plugins[?(@.name=='__NAME__')].source.ref"
+        }
+      ]
+    }
+  }
+}

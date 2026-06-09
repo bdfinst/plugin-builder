@@ -1,0 +1,5 @@
+{
+  "name": "sample",
+  "version": "0.1.0",
+  "description": "A deliberately hygiene-violating plugin used to prove the sensor fails closed."
+}
