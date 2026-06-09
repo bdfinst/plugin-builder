@@ -1,0 +1,4 @@
+{
+  "$comment": "Hook wiring for __NAME__. Hook commands run from the plugin root, so the bare 'bash hooks/x.sh' form is correct here. Remove this file if the plugin has no hooks.",
+  "hooks": {}
+}

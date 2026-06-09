@@ -1,0 +1,15 @@
+{
+  "$comment": "Drop this into .claude/settings.json at the marketplace repo root to install prerequisites at the start of cloud/web sessions. The cloud-setup.sh script self-gates so local sessions are unaffected.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/cloud-setup.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+# Python dev dependencies for the marketplace-builder repo.
+# Currently the toolchain is shell-only (bats, shellcheck, jq) — see
+# scripts/dev-setup.sh. Add Python deps here as harness components appear.

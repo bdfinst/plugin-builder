@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "separate-pull-requests": true,
+  "packages": {
+    "plugins/marketplace-builder": {
+      "release-type": "simple",
+      "package-name": "marketplace-builder",
+      "component": "marketplace-builder",
+      "extra-files": [
+        ".claude-plugin/plugin.json",
+        {
+          "type": "json",
+          "path": "/.claude-plugin/marketplace.json",
+          "jsonpath": "$.plugins[?(@.name=='marketplace-builder')].version"
+        },
+        {
+          "type": "json",
+          "path": "/.claude-plugin/marketplace.json",
+          "jsonpath": "$.plugins[?(@.name=='marketplace-builder')].source.ref"
+        }
+      ]
+    }
+  }
+}

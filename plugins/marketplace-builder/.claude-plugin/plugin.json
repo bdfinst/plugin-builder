@@ -1,0 +1,17 @@
+{
+  "name": "marketplace-builder",
+  "version": "0.1.0",
+  "description": "Scaffold, audit, and maintain Claude Code plugin-marketplace monorepos. Enforces shipping hygiene, portability, testing, and automated release/catalog sync.",
+  "author": {
+    "name": "Bryan Finster"
+  },
+  "homepage": "https://github.com/bdfinst/plugin-builder",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "marketplace",
+    "scaffolding",
+    "meta-plugin"
+  ]
+}

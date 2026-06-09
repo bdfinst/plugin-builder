@@ -1,0 +1,40 @@
+name: plugin-tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  structural:
+    name: structural + catalog sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Structural checks
+        run: bash scripts/structural-check.sh
+
+  portability:
+    name: shellcheck portability sweep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Sweep shipped + dev scripts
+        run: bash scripts/portability-check.sh
+
+  sensor:
+    name: hygiene sensor (bats)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+      - name: Run sensor + repo tests
+        run: bats tests/repo
